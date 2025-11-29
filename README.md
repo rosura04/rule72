@@ -13,4 +13,4 @@ A multi-agent AI system that teaches and applies the Rule of 72 for financial ed
 ```bash
 pip install -r requirements.txt
 ```
-Make sure to replace the variable in main.py with your OpenAI API key when running.
+**Make sure to replace the variable at line 25 in main.py with your OpenAI API key when running.**

@@ -9,7 +9,7 @@ class Rule72Calculator:
     
     def calculate(self, user_input):
         """Extract numbers and perform Rule of 72 calculation"""
-        # Simple number extraction from text
+        # simple number extraction from text
         numbers = []
         words = user_input.split()
         for word in words:
@@ -21,10 +21,10 @@ class Rule72Calculator:
                 continue
         
         if len(numbers) == 1:
-            # Assume it's an interest rate
+            # assume it's an interest rate
             result = calculate_rule_72(rate=numbers[0])
         elif len(numbers) >= 2:
-            # Use context to determine what user wants
+            # use context to determine what user wants
             if 'year' in user_input.lower() or 'double' in user_input.lower():
                 result = calculate_rule_72(years=numbers[0])
             else:
@@ -50,25 +50,25 @@ class FinancialEducator:
             rate = calculation_result["rate"]
             years = calculation_result["years_to_double"]
             explanation = f"""
-💰 **Rule of 72 Calculation:**
+**Rule of 72 Calculation:**
 
 • At {rate}% annual interest, your investment will double in approximately **{years} years**
 • Formula: 72 ÷ {rate} = {years} years
 • This means every ${1,000} would become ${2,000} in {years} years!
 
-💡 **Pro Tip:** The Rule of 72 works because of compound interest - your earnings start earning their own earnings!
+**Pro Tip:** The Rule of 72 works because of compound interest. Your earnings start earning their own earnings!
             """
         else:
             years = calculation_result["years"]
             rate = calculation_result["required_rate"]
             explanation = f"""
-💰 **Rule of 72 Calculation:**
+**Rule of 72 Calculation:**
 
 • To double your money in {years} years, you need approximately **{rate}%** annual return
 • Formula: 72 ÷ {years} = {rate}%
 • This helps set realistic investment expectations!
 
-💡 **Pro Tip:** Different investments offer different returns - stocks average 7-10%, bonds 3-5%, savings accounts 1-2%
+**Pro Tip:** Different investments offer different returns: stocks average 7-10%, bonds 3-5%, savings accounts 1-2%
             """
         
         self.explanations.append(explanation)
@@ -78,11 +78,11 @@ class FinancialEducator:
         """Compare multiple interest rates"""
         comparisons = compare_multiple_rates(rates)
         
-        explanation = "📊 **Comparison of Different Interest Rates:**\n\n"
+        explanation = "**Comparison of Different Interest Rates:**\n\n"
         for comp in comparisons:
             explanation += f"• At {comp['rate']}%: doubles in {comp['years_to_double']} years\n"
         
-        explanation += "\n💡 **Key Insight:** Higher returns dramatically reduce the time needed to double your money!"
+        explanation += "\n**Key Insight:** Higher returns dramatically reduce the time needed to double your money!"
         return explanation
 
 class ConversationManager:
@@ -95,21 +95,21 @@ class ConversationManager:
     
     def process_query(self, user_input):
         """Main method to handle user queries"""
-        # Store user input
+        # store user input
         self.conversation_history.append({"role": "user", "content": user_input})
         
-        # Determine what type of query this is
+        # decide what type of query this is
         if any(word in user_input.lower() for word in ['compare', 'multiple', 'different']):
-            # Comparison request
-            rates = [5, 8, 10, 12]  # Default rates
-            # Extract rates from input if provided
+            # comparison request
+            rates = [5, 8, 10, 12]  # default rates
+            # get rates from input if given
             numbers = []
             words = user_input.split()
             for word in words:
                 word = word.replace('%', '')
                 try:
                     num = float(word)
-                    if 1 <= num <= 30: # Reasonable interest rate range
+                    if 1 <= num <= 30: # reasonable interest rate range
                         numbers.append(num)
                 except ValueError:
                     continue
@@ -120,11 +120,11 @@ class ConversationManager:
             result = self.educator.compare_rates(rates)
         
         else:
-            # Single calculation request
+            # single calculation request
             calculation = self.calculator.calculate(user_input)
             result = self.educator.explain_calculation(calculation)
         
-        # Store agent response
+        # store agent response
         self.conversation_history.append({"role": "assistant", "content": result})
         
         return result

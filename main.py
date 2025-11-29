@@ -3,29 +3,31 @@ from agents import ConversationManager
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Try to import OpenAI (most accessible for students)
+# import openAI
 try:
     import openai
+    from openai import OpenAI
+    client = OpenAI()
     HAS_OPENAI = True
 except ImportError:
     HAS_OPENAI = False
     print("OpenAI not available - using built-in explanations")
 
 class EnhancedFinancialAdvisor:
-    """Optional: LLM-enhanced agent for richer explanations"""
+    """LLM-enhanced agent for richer explanations"""
     
     def __init__(self, use_llm=False):
         self.use_llm = use_llm
         self.conversation_manager = ConversationManager()
         
         if use_llm and HAS_OPENAI:
-            # Set your OpenAI API key here
+            # set your OpenAI API key here
             openai.api_key = 'your-key-here'  # Replace with your real key
     
     def get_llm_enhancement(self, calculation_result, user_question):
-        """Use LLM to enhance the explanation"""
+        """LLM to enhance explanation"""
         if not self.use_llm or not HAS_OPENAI:
-            return "🔒 LLM enhancement not available - using built-in explanations"
+            return "LLM enhancement not available - using built-in explanations"
         
         try:
             prompt = f"""
@@ -40,32 +42,32 @@ class EnhancedFinancialAdvisor:
             Keep it under 100 words.
             """
             
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=150
-            )
+                max_tokens = 150
+                )
             
             return response.choices[0].message.content.strip()
             
         except Exception as e:
-            return f"⚠️ LLM service temporarily unavailable. {str(e)}"
+            return f"LLM service temporarily unavailable. {str(e)}"
     
     def create_growth_chart(self, principal=1000, rate=8, years=20):
         """Create a simple investment growth chart"""
-        # Calculate doubling periods
+        # calculate doubling periods
         years_to_double = 72 / rate
         doubling_periods = years / years_to_double
         
-        # Generate data
+        # generate data
         time_points = np.arange(0, years + 1)
         values = principal * (2 ** (time_points / years_to_double))
         
-        # Create plot
+        # create plot
         plt.figure(figsize=(10, 6))
         plt.plot(time_points, values, 'b-', linewidth=2, label=f'Investment at {rate}%')
         
-        # Mark doubling points
+        # mark doubling points
         doubling_times = [years_to_double * i for i in range(1, int(doubling_periods) + 1)]
         for t in doubling_times:
             if t <= years:
@@ -80,16 +82,16 @@ class EnhancedFinancialAdvisor:
         plt.grid(True, alpha=0.3)
         plt.legend()
         
-        # Save chart
+        # save chart
         plt.savefig('investment_growth.png')
         plt.close()
         
-        return "📈 Chart saved as 'investment_growth.png'"
+        return "Chart saved as 'investment_growth.png'"
 
 def main():
     """Main interactive application"""
     print("=" * 60)
-    print("💰 RULE OF 72 FINANCIAL ADVISOR SYSTEM")
+    print("Rule of 72 Financial Advisor System")
     print("=" * 60)
     print("\nI can help you understand how long it takes investments to double!")
     print("\nExamples you can try:")
@@ -99,23 +101,23 @@ def main():
     print("• 'Create a growth chart for 7% return'")
     print("• Type 'quit' to exit\n")
     
-    advisor = EnhancedFinancialAdvisor(use_llm=False)  # Set to True if you have API key
+    advisor = EnhancedFinancialAdvisor(use_llm=True)  # set to True if you have API key
     conversation_manager = ConversationManager()
     
     while True:
         try:
-            user_input = input("\n🎯 Your question: ").strip()
+            user_input = input("\nYour question: ").strip()
             
             if user_input.lower() in ['quit', 'exit', 'bye']:
-                print("Thanks for using the Rule of 72 Advisor! 💰")
+                print("Thanks for using the Rule of 72 Advisor!")
                 break
             
             if not user_input:
                 continue
             
-            # Special command for chart
+            # special command for chart
             if 'chart' in user_input.lower() or 'graph' in user_input.lower():
-                # Extract rate for chart
+                # extract rate for chart
                 numbers = []
                 words = user_input.split()
                 for word in words:
@@ -132,28 +134,28 @@ def main():
                 print(f"\n{chart_message}")
                 continue
             
-            # Process normal query
+            # process normal query
             response = conversation_manager.process_query(user_input)
             print(f"\n{response}")
             
-            # Show LLM enhancement if available
-            if HAS_OPENAI and len(user_input) < 50:  # Simple queries only
+            # show llm enhancement if available
+            if HAS_OPENAI and len(user_input) < 50:  # simple queries only
                 enhancement = advisor.get_llm_enhancement(
                     conversation_manager.conversation_history[-1], 
                     user_input
                 )
                 if "not available" not in enhancement:
-                    print(f"\n💡 AI Insight: {enhancement}")
+                    print(f"\nAI Insight: {enhancement}")
             
-            # Show conversation history
+            # show conversation history
             if len(conversation_manager.get_conversation_history()) % 3 == 0:
-                print(f"\n📝 Conversation history: {len(conversation_manager.get_conversation_history())//2} exchanges")
+                print(f"\nConversation history: {len(conversation_manager.get_conversation_history())//2} exchanges")
         
         except KeyboardInterrupt:
-            print("\n\nThanks for using the Rule of 72 Advisor! 💰")
+            print("\n\nThanks for using the Rule of 72 Advisor!")
             break
         except Exception as e:
-            print(f"\n❌ Error: {str(e)}")
+            print(f"\nError: {str(e)}")
             print("Please try asking your question differently.")
 
 if __name__ == "__main__":
